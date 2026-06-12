@@ -74,6 +74,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ----------------- API KEYS -----------------
-GEMINI_API_KEY = "AIzaSyB2ga0UIPUPmZIkhMkF9bYd9EwAITx3FeA"
-OPENWEATHER_API_KEY = "e66d01ce75eb4f5c92364508251007"
+# ----------------- API KEYS -----------------
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
