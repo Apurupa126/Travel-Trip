@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home - Smart Travel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      /* Updated: attractive travel themed background image */
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 128, 128, 0.6)),
+                  url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      padding: 40px 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: slideUp 1s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      color: #00ffff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-shadow: 0 0 15px rgba(0,255,255,0.6);
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      background: rgba(255,255,255,0.3);
+      outline: none;
+    }
+
+    input[type="text"]::placeholder {
+      color: #eee;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: linear-gradient(to right, #00ffff, #00bebe);
+      border: none;
+      border-radius: 5px;
+      color: #333;
+      font-weight: 600;
+      margin: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,255,255,0.4);
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #00bebe, #00ffff);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,255,255,0.5);
+    }
+
+    #options {
+      margin-top: 30px;
+    }
+
+    #options h3 {
+      margin-bottom: 20px;
+      color: #00ffff;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+
+    #options button {
+      display: inline-block;
+      width: 180px;
+      margin: 8px;
+    }
+
+    a {
+      color: #00ffff;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 20px;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #00bebe;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+        padding: 25px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+      }
+
+      #options button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container">
+      <h2>Welcome, {{ user.username }}</h2>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="source" placeholder="Enter Source" required><br>
+        <input type="text" name="destination" placeholder="Enter Destination" required><br>
+        <button type="submit">OK</button>
+      </form>
+
+      {% if show_options %}
+      <div id="options">
+        <h3>Options for {{ source }} to {{ destination }}</h3>
+        <button onclick="location.href='{% url 'hotels' %}'">Hotels</button>
+        <button onclick="location.href='{% url 'restaurants' %}'">Restaurants</button>
+        <button onclick="location.href='{% url 'popularplaces' %}'">Popular Places</button>
+        <button onclick="location.href='{% url 'directions' %}'">Directions</button>
+        <button onclick="location.href='{% url 'weather' %}'">Weather</button>
+        <button onclick="location.href='{% url 'budget' %}'">Budget</button>
+        <button onclick="location.href='{% url 'atms' %}'">Nearby ATMs</button>
+        <button onclick="location.href='{% url 'hospitals' %}'">Nearby Hospitals</button>
+        <button onclick="location.href='{% url 'policestations' %}'">Nearby Police Stations</button>
+      </div>
+      {% endif %}
+
+      <p><a href="{% url 'logout' %}">Logout</a></p>
+    </div>
+  </div>
+</body>
+</html>

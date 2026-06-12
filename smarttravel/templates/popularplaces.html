@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Popular Places - Smart Travel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      /* Beach and travel-themed attractive background */
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      min-height: 100vh;
+      padding: 50px 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+
+    .place-card {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .place-card:hover {
+      transform: scale(1.02);
+      background: rgba(255,255,255,0.2);
+    }
+
+    .place-card h3 {
+      margin-top: 0;
+      color: #00ffff;
+      text-shadow: 0 0 5px rgba(0,255,255,0.5);
+    }
+
+    .place-card img {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .place-card p {
+      margin: 5px 0;
+      font-size: 1.05em;
+    }
+
+    a {
+      display: inline-block;
+      text-align: center;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #00ffff;
+      color: #333;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #00bebe;
+      color: black;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 30px auto;
+        width: 90%;
+        padding: 20px;
+      }
+
+      .place-card img {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container">
+      <h2>Popular Places near {{ destination }}</h2>
+
+      {% if places %}
+        {% for place in places %}
+          <div class="place-card">
+            <h3>{{ place.name }}</h3>
+            {% if place.image_url %}
+              <img src="{{ place.image_url }}" alt="Image of {{ place.name }}">
+            {% endif %}
+            <p><strong>Address:</strong> {{ place.address }}</p>
+            <p><strong>Distance:</strong> {{ place.distance }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No popular places found.</p>
+      {% endif %}
+
+      <div style="text-align:center;">
+        <a href="{% url 'home' %}">← Back to Home</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

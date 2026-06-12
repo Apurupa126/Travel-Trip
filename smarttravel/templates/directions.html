@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Free Tourist Guide Map</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #00cec9, #0984e3);
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #00cec9;
+    }
+
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00cec9;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0984e3;
+    }
+
+    #output {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    @media (max-width: 600px) {
+      input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tourist Guide: Route Finder (Free & OpenStreetMap)</h2>
+    <div>
+      <label>Source City:</label>
+      <input type="text" id="source" placeholder="e.g. Chennai" />
+      <label>Destination City:</label>
+      <input type="text" id="destination" placeholder="e.g. Bangalore" />
+      <button onclick="findRoute()">Show Route</button>
+    </div>
+    <div id="output"></div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    let map = L.map('map').setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let routeLine;
+
+    async function geocode(place) {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.length === 0) throw new Error("Place not found: " + place);
+      return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon)
+      };
+    }
+
+    async function findRoute() {
+      const sourceName = document.getElementById('source').value;
+      const destName = document.getElementById('destination').value;
+      document.getElementById('output').innerHTML = "Loading route...";
+
+      if (!sourceName || !destName) {
+        alert("Please enter both source and destination cities.");
+        return;
+      }
+
+      try {
+        const src = await geocode(sourceName);
+        const dest = await geocode(destName);
+
+        const routeURL = `https://router.project-osrm.org/route/v1/driving/${src.lon},${src.lat};${dest.lon},${dest.lat}?overview=full&geometries=geojson`;
+        const routeResp = await fetch(routeURL);
+        const routeData = await routeResp.json();
+
+        if (routeData.routes.length === 0) {
+          throw new Error("No route found.");
+        }
+
+        const coords = routeData.routes[0].geometry.coordinates;
+        const latlngs = coords.map(c => [c[1], c[0]]);
+
+        if (routeLine) map.removeLayer(routeLine);
+        routeLine = L.polyline(latlngs, { color: 'lime', weight: 5 }).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+
+        const distanceKm = (routeData.routes[0].distance / 1000).toFixed(2);
+        const durationMin = Math.round(routeData.routes[0].duration / 60);
+
+        document.getElementById('output').innerHTML = `
+          <strong>Route from ${sourceName} to ${destName}</strong><br>
+          Distance: ${distanceKm} km<br>
+          Duration: ${durationMin} minutes
+        `;
+      } catch (err) {
+        document.getElementById('output').innerHTML = "";
+        alert("Error: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

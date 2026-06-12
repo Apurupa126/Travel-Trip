@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotels in {{ destination }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1560347876-aeef00ee58a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            /* Hotel room interior image */
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            min-height: 100vh;
+            padding: 50px 0;
+        }
+
+        .container {
+            max-width: 800px;
+            background: rgba(0,0,0,0.7);
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ffff;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            background: rgba(255,255,255,0.2);
+        }
+
+        strong {
+            font-size: 1.2em;
+            color: #00ffff;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #00ffff;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #00bebe;
+            color: black;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                margin: 30px auto;
+                padding: 20px;
+            }
+
+            li {
+                padding: 12px;
+            }
+
+            strong {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1>Hotels in {{ destination }}</h1>
+
+            <ul>
+            {% for hotel in hotels %}
+                <li>
+                    <strong>{{ hotel.name }}</strong><br>
+                    Address: {{ hotel.address }}<br>
+                    Cost per night: {{ hotel.cost }}<br>
+                    Rating: {{ hotel.rating }}
+                </li>
+            {% endfor %}
+            </ul>
+
+            <div style="text-align:center;">
+                <a href="{% url 'home' %}">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
