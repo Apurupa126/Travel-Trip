@@ -244,9 +244,9 @@ For each hospital, provide:
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import google.generativeai as genai
+from django.conf import settings
 
-# Configure Gemini API key
-genai.configure(api_key="AIzaSyB2ga0UIPUPmZIkhMkF9bYd9EwAITx3FeA")  # Replace with your actual Gemini API key
+genai.configure(api_key=settings.GEMINI_API_KEY)
 
 
 @login_required
